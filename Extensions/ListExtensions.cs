@@ -54,5 +54,19 @@ namespace Extensions
 
             return newOutputList;
         }
+
+        public static void MoveItem<T>(this IList<T> list, int position, Predicate<T> match)
+        {
+            if (position < 0 || list == null)
+                return;
+
+            var index = list.ToList().FindIndex(match);
+            if (index >= 0 && index != position)
+            {
+                var temp = list[index];
+                list.RemoveAt(index);
+                list.Insert(position, temp);
+            }
+        }
     }
 }
