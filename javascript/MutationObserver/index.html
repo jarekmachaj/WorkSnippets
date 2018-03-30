@@ -1,0 +1,80 @@
+<!-- https://eager.io/blog/three-real-world-use-cases-for-mutation-observer/ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Observer sample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #20262E;
+            padding: 20px;
+            font-family: Helvetica;
+        }
+
+        #newElement {
+            background: #fff;
+            border-radius: 4px;
+            padding: 20px;
+            font-size: 25px;
+            text-align: center;
+            transition: all 0.2s;
+            margin: 0 auto;
+            width: 300px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+
+        var action = function(){
+            setTimeout(function () {
+                $('#newElement').html('Changed - action');
+            }, 3000);
+        }
+
+        var checkNode = function (addedNode, observer) {            
+            if (addedNode.nodeType === 1 && addedNode.id === 'newElement') {
+                action();
+                observer.disconnect();
+            }
+        }        
+        
+        var observer = new MutationObserver(function (mutations) {
+            var me = this;
+            mutations.forEach(function (mutation) {                
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
+                        checkNode(mutations[i].addedNodes[j], me);
+                    }
+                }
+            });
+        });
+
+        var config = {
+            attributes: true,
+            childList: true,
+            characterData: false,
+            subtree: true
+        };
+
+        $(document).ready(function(){
+            var target = document.querySelector('body');
+            observer.observe(target, config);
+        });                
+
+        setTimeout(function () {
+            $('#mutations').append('<div id="newElement">My new Element</div>');
+        }, 3000);
+
+    </script>
+</head>
+
+<body>
+    <div id="mutations">
+        llll
+    </div>
+</body>
+
+</html>
