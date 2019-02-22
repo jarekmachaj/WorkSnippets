@@ -4,6 +4,8 @@ for (i = 0; i < tab.length; i += chunk) {
     chunks.push(tab.slice(i, i + chunk));    
 }
 
+//usage for Oracle query
+
 var query = "("
 for (var i = 0; i < chunks.length; i++) {
 	if (i > 0) query += " OR "
